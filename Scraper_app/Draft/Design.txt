@@ -1,0 +1,33 @@
+# GUI Design:
+	√ PyQt
+
+Have fields for:
+Website URL
+	HTML tags and optional attributes
+	Output column name
+	Save location and output format (CSV, JSON, JSONL)
+
+
+# Backend Functionality:
+	√ scrapy 
+
+
+# Script Generation:
+	generate the scraping code dynamically.
+
+
+# Output File Generation:
+	CSV, JSON
+
+
+# Exception Handling:
+	Websites might change structure, block bots, or have varying load times. Handle these exceptions gracefully.
+	Integrate a timeout with the requests to avoid hanging if a website takes too long to respond.
+
+
+# Enhancements:
+	Allow users to set custom headers and user-agents.
+	Rate Limiting: Integrate a delay mechanism to avoid hitting websites too frequently.
+	JavaScript Rendering: integrating a headless browser like Selenium or using Scrapy.
+	Regular Expressions.
+	Give an option to save the generated script for future use.
