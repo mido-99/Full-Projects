@@ -173,7 +173,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Export to</string>
+    <string>Save to</string>
    </property>
   </widget>
  </widget>

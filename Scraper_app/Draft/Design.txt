@@ -5,7 +5,7 @@ Have fields for:
 √ Website URL
 	√ HTML tags and optional attributes
 	√ Output column name
-	Save location and output format (CSV, JSON, JSONL)
+	√ Save location and output format (CSV, JSON, JSONL)
 
 
 # Backend Functionality:
@@ -17,7 +17,7 @@ Have fields for:
 
 
 # Output File Generation:
-	CSV, JSON
+	CSV, JSON, JSONL
 
 
 # Exception Handling:

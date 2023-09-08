@@ -1,15 +1,15 @@
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
-from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidget, QListWidgetItem, 
+QMessageBox, QFileDialog)
 # from PyQt6.uic.load_ui import loadUiType
 from PyQt6.uic import loadUi
 from Custom_Widgets import CustomListItem
+from pathlib import Path
+from shared_data import url, data_list, START
 
 
-start_url = ''      # Start URL for scraping
-data_list = []      # Final list of tags to be scraped
-
-class MainApp(QtWidgets.QMainWindow):
+class MainApp(QMainWindow):
     
     def __init__(self):
         super().__init__()
@@ -19,11 +19,14 @@ class MainApp(QtWidgets.QMainWindow):
         self.handle_buttons()
         
     def handle_ui(self):
-        self.myQlistWidget = QtWidgets.QListWidget()
+        self.setWindowTitle('Scraper')
+        self.setWindowIcon(QIcon('scraper.png'))
+        self.myQlistWidget = QListWidget()
     
     def handle_buttons(self):
         self.pushButton_2.clicked.connect(self.add_field)
-        self.pushButton_3.clicked.connect(self.get_url)
+        self.pushButton.clicked.connect(self.get_save_path)
+        self.pushButton_3.clicked.connect(self.start_crawling)
         
         
     def add_field(self):
@@ -31,7 +34,7 @@ class MainApp(QtWidgets.QMainWindow):
 
         myCustom = CustomListItem()
         
-        myQlistItem = QtWidgets.QListWidgetItem(self.listWidget)
+        myQlistItem = QListWidgetItem(self.listWidget)
         myQlistItem.setSizeHint(QSize(400, 50))
         self.listWidget.setItemWidget(myQlistItem, myCustom)
         
@@ -46,7 +49,7 @@ class MainApp(QtWidgets.QMainWindow):
             elem_attr = custom.elem_attr.text()
             attr_value = custom.attr_value.text()
             column_name = custom.column_name.text()
-
+            
             data = {
             "Tag Element": tag_elem,
             "Element Attribute": elem_attr,
@@ -58,11 +61,29 @@ class MainApp(QtWidgets.QMainWindow):
         return data_list
     
     def get_url(self):
-        start_url = self.lineEdit.text()
+        """Fetch start url"""
+        url = self.lineEdit.text()
+    
+    def get_save_path(self):
+        """Get file save location and type"""
+        save = QFileDialog.getSaveFileName(self, 'Save to', 'Data.jsonl', 
+            "jsonl files (*.jsonl);; json files (*.json);; csv files (*.csv)")
+    
+    def start_crawling(self):
+        """Method chain activator"""
+        
+        self.get_url()
+        self.get_save_path()
+        self.get_user_input()
+        START = True
+        if START:
+            from scraper_app.scraper_app.spiders.scraper_app import Scraper
+            s = Scraper()
+            s.scrape_data()
 
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication([])
+    app = QApplication([])
     widget = MainApp()
     widget.show()
     app.exec()
