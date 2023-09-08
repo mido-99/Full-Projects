@@ -3,40 +3,11 @@ from PyQt6.QtCore import QSize
 from PyQt6 import QtWidgets
 # from PyQt6.uic.load_ui import loadUiType
 from PyQt6.uic import loadUi
+from Custom_Widgets import CustomListItem
 
 
-# Form_class, _ = loadUiType('main.ui')   # Load the ui file in dir
-
-class CustomWdiget(QtWidgets.QWidget):
-    
-    def __init__(self):
-        super().__init__()
-        
-        self.allQBoxLayout = QtWidgets.QHBoxLayout()
-        
-        self.tag_element = QtWidgets.QLineEdit()
-        self.elem_attr = QtWidgets.QLineEdit()
-        self.attr_value = QtWidgets.QLineEdit()
-        self.column_name = QtWidgets.QLineEdit()
-        self.allQBoxLayout.addWidget(self.tag_element)
-        self.allQBoxLayout.addWidget(self.elem_attr)
-        self.allQBoxLayout.addWidget(self.attr_value)
-        self.allQBoxLayout.addWidget(self.column_name)
-        
-        self.setLayout(self.allQBoxLayout)
-        
-    def setPlaceHolder_tag_elem(self, text):
-        self.tag_element.setPlaceholderText(text)
-    
-    def setPlaceHolder_elem_attr(self, text):
-        self.elem_attr.setPlaceholderText(text)
-
-    def setPlaceHolder_attr_vlaue(self, text):
-        self.attr_value.setPlaceholderText(text)
-
-    def setPlaceHolder_column(self, text):
-        self.column_name.setPlaceholderText(text)
-
+start_url = ''      # Start URL for scraping
+data_list = []      # Final list of tags to be scraped
 
 class MainApp(QtWidgets.QMainWindow):
     
@@ -47,31 +18,26 @@ class MainApp(QtWidgets.QMainWindow):
         self.handle_ui()
         self.handle_buttons()
         
-        
     def handle_ui(self):
         self.myQlistWidget = QtWidgets.QListWidget()
     
     def handle_buttons(self):
         self.pushButton_2.clicked.connect(self.add_field)
-        self.pushButton_3.clicked.connect(self.get_data)
+        self.pushButton_3.clicked.connect(self.get_url)
         
         
     def add_field(self):
         """Add a new field to the list when user clicks add"""
 
-        myCustom = CustomWdiget()
-        myCustom.setPlaceHolder_tag_elem('tag element')
-        myCustom.setPlaceHolder_elem_attr('attribute')
-        myCustom.setPlaceHolder_attr_vlaue('value')
-        myCustom.setPlaceHolder_column('column name')
+        myCustom = CustomListItem()
         
         myQlistItem = QtWidgets.QListWidgetItem(self.listWidget)
         myQlistItem.setSizeHint(QSize(400, 50))
         self.listWidget.setItemWidget(myQlistItem, myCustom)
         
-    def get_data(self):
-        data_list = []
-        
+    def get_user_input(self):
+        """Retrieve data from QlineEdit widgets in a custom Listitem Widget"""
+                
         for i in range(self.listWidget.count()):
             item = self.listWidget.item(i)
             custom = self.listWidget.itemWidget(item) #*
@@ -90,6 +56,9 @@ class MainApp(QtWidgets.QMainWindow):
             data_list.append(data)
         
         return data_list
+    
+    def get_url(self):
+        start_url = self.lineEdit.text()
 
 
 if __name__ == '__main__':
@@ -100,6 +69,7 @@ if __name__ == '__main__':
 
 
 """
-#* This line works like the opposite side of the coin for setItemWidget(); the latter is
-used to change a normal item into a custom widget, while the former is the opposite.
+#* This line works like the opposite side of the coin for setItemWidget(QlistItem, custom).
+the latter is used to change a normal item into a custom widget, while the former is used 
+to transform an item to the custom one, so we can access its methods and attributs.
 """

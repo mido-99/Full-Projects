@@ -2,14 +2,14 @@
 	√ PyQt
 
 Have fields for:
-Website URL
-	HTML tags and optional attributes
-	Output column name
+√ Website URL
+	√ HTML tags and optional attributes
+	√ Output column name
 	Save location and output format (CSV, JSON, JSONL)
 
 
 # Backend Functionality:
-	√ scrapy 
+	scrapy 
 
 
 # Script Generation:
