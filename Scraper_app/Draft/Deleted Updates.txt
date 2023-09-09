@@ -5,13 +5,20 @@ QMessageBox, QFileDialog)
 # from PyQt6.uic.load_ui import loadUiType
 from PyQt6.uic import loadUi
 from Custom_Widgets import CustomListItem
-# from pathlib import Path
 from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
+from scraper_app.scraper_app.spiders.scraper_app import Scraper
 
 
-# url = ''      # Start URL for scraping
-# data_list = []      # Final list of tags to be scraped
+
+url = ''      # Start URL for scraping
+data_dict = {}      # Final list of tags to be scraped
+START = False       # Variable to infrom spider file to start crawling (avoid circular import)
+
+def scrape_start():
+    process = CrawlerProcess()
+    process.crawl(Scraper)
+    process.start()    
+
 
 class MainApp(QMainWindow):
     
@@ -41,12 +48,6 @@ class MainApp(QMainWindow):
         myQlistItem = QListWidgetItem(self.listWidget)
         myQlistItem.setSizeHint(QSize(400, 50))
         self.listWidget.setItemWidget(myQlistItem, myCustom)
-    
-    def set_data(self, data):
-        self.data_list = [data]
-        
-    def get_data(self):
-        return self.data_list
         
     def get_user_input(self):
         """Retrieve data from QlineEdit widgets in a custom Listitem Widget"""
@@ -60,22 +61,20 @@ class MainApp(QMainWindow):
             attr_value = custom.attr_value.text()
             column_name = custom.column_name.text()
             
-            data = {
+            data_dict = {
             "Tag Element": tag_elem,
             "Element Attribute": elem_attr,
             "Attribute Value": attr_value,
             "Column Name": column_name
             }
-            self.set_data(data)
+            
     
     def get_url(self):
         """Fetch start url"""
-
         url = self.lineEdit.text()
     
     def get_save_path(self):
         """Get file save location and type"""
-        
         save = QFileDialog.getSaveFileName(self, 'Save to', 'Data.jsonl', 
             "jsonl files (*.jsonl);; json files (*.json);; csv files (*.csv)")
     
@@ -83,21 +82,15 @@ class MainApp(QMainWindow):
         """Method chain activator"""
         
         self.get_url()
-        self.get_save_path()
+        # self.get_save_path()
         self.get_user_input()
-
-        process = CrawlerProcess(get_project_settings())
-        process.crawl('scraper_app')
-        process.start()
         
-        self.data_list.clear()
+        scrape_start()
 
 
-import globals
 if __name__ == '__main__':
     app = QApplication([])
     widget = MainApp()
-    globals.main_app_instance = widget
     widget.show()
     app.exec()
 
@@ -107,3 +100,33 @@ if __name__ == '__main__':
 the latter is used to change a normal item into a custom widget, while the former is used 
 to transform an item to the custom one, so we can access its methods and attributs.
 """
+
+SPIDER
+
+
+import scrapy
+# from shared_data import url, data_dict, START
+
+
+# class Scraper(scrapy.Spider):
+#     name = 'scraper_app'
+#     start_urls = [f'{url}']
+    
+#     def parse(self, response):
+#         self.scrape_data()
+    
+#     def scrape_data(self):
+#         for item in data_dict:
+#             print (item)
+
+class Scraper(scrapy.Spider):
+    name = 'scraper_app'
+    start_urls = ['http://google.com']
+
+    def parse(self, response):
+        yield {
+            'word': response.css()
+        }
+
+
+

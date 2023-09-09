@@ -23,6 +23,24 @@ Have fields for:
 # Exception Handling:
 	Websites might change structure, block bots, or have varying load times. Handle these exceptions gracefully.
 	Integrate a timeout with the requests to avoid hanging if a website takes too long to respond.
+	
+	# Special:
+    raise error.ReactorNotRestartable()
+	twisted.internet.error.ReactorNotRestartable
+	Solution:
+	The error `ReactorNotRestartable` is a well-known limitation of Twisted, which is the asynchronous framework that Scrapy is built upon. Once a Twisted reactor has been started and then stopped, it cannot be restarted within the same process.
+
+	In the context of Scrapy, this means that once you've started a crawl with `CrawlerProcess` and it finishes, you cannot start another crawl in the same script or session without encountering this error.
+
+	If you want to run multiple spiders or run the same spider multiple times, you have a few options:
+
+	1. **Use CrawlerRunner**: This is more manual but it allows you to keep the reactor running and schedule multiple spiders. However, this might not be a perfect fit with GUI applications where you want the reactor to stop after each crawl.
+	   
+	2. **Run spiders in separate processes**: One way to bypass the `ReactorNotRestartable` error is to run each spider in a separate process. Python's `multiprocessing` module can help with this. Each process gets its own memory space and, consequently, its own Twisted reactor.
+
+	3. **Combine Scrapy with Qt's own event loop**: This is a more advanced solution that involves combining Scrapy with Qt's event loop. There are some resources and discussions available online that provide insights into this method.
+
+	For many applications, the second option (using `multiprocessing`) is the most straightforward. When you want to start a crawl, you would spawn a new process to run the spider, and since each process has its own reactor, you don't run into the issue of trying to restart an already stopped reactor.
 
 
 # Enhancements:
