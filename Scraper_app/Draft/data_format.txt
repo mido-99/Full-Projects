@@ -1,0 +1,7 @@
+Data Format:
+
+[
+	{tag:tag_v, attr:attr_type, attr_v:value, col:col_value}, 
+	{__:__, __:__, __:__, __:__}, 
+	....
+]
