@@ -44,56 +44,64 @@ class MainApp(QMainWindow):
     
     # These setters and getters are used to retrieve data in spider file from current 
     # running app instance
-    def set_data(self, data):
-        self.data_list = [data]
-            
-    def get_data(self):
-        return self.url, self.data_list
-
+    def set_url(self):
+        """Fetch start url"""
+        self.url = self.lineEdit.text()
     
+    def set_parent(self):
+        """Parent element attributes"""
+        self.parent_tag = self.lineEdit_2.text()
+        self.parent_attr = self.lineEdit_3.text()
+        self.parent_attr_value = self.lineEdit_4.text().replace(' ', '.')
+        
     def get_user_input(self):
         """Retrieve data from QlineEdit widgets in a custom Listitem Widget"""
-                
+        
+        self.data_list = []
         for i in range(self.listWidget.count()):
             item = self.listWidget.item(i)
             custom = self.listWidget.itemWidget(item) #*
             
             tag_elem = custom.tag_element.text()
             elem_attr = custom.elem_attr.text()
-            attr_value = custom.attr_value.text()
+            attr_value = custom.attr_value.text().replace(' ', '.')
             column_name = custom.column_name.text()
             
             data = {
-            "Tag Element": tag_elem,
-            "Element Attribute": elem_attr,
-            "Attribute Value": attr_value,
-            "Column Name": column_name
+            "tag": tag_elem,
+            "elem_attr": elem_attr,
+            "attr_value": attr_value,
+            "column": column_name
             }
-            self.set_data(data)
-    
-    def get_url(self):
-        """Fetch start url"""
-
-        self.url = self.lineEdit.text()
+            self.data_list.append(data)
     
     def get_save_path(self):
         """Get file save location and type"""
         
-        save = QFileDialog.getSaveFileName(self, 'Save to', 'Data.jsonl', 
+        self.save_path, _ = QFileDialog.getSaveFileName(self, 'Save to', 'Data.jsonl', 
             "jsonl files (*.jsonl);; json files (*.json);; csv files (*.csv)")
+        return self.save_path
     
+    def get_data(self):
+        """Retrieve all collected data into spider file"""
+
+        return (self.url, self.data_list, self.parent_tag, self.parent_attr, 
+                self.parent_attr_value)
+
     def start_crawling(self):
         """Method chain activator"""
         
-        self.get_url()
-        self.get_save_path()
-        self.get_user_input()
-
-        process = CrawlerProcess(get_project_settings()) #*4
-        process.crawl('scraper_app')
-        process.start()
-        
-        self.data_list.clear()
+        if self.get_save_path():
+            self.set_url()
+            self.set_parent()
+            self.get_user_input()
+            
+            process = CrawlerProcess(get_project_settings()) #*4
+            process.crawl('scraper_app')
+            QApplication.processEvents()
+            process.start()
+            
+            self.data_list.clear()
 
 
 import globals
@@ -112,7 +120,7 @@ to transform an item to the custom one, so we can access its methods and attribu
 
 
 #*2 Breakdown of what is going on when the button is clicked:
-First of all DATA collection; this happens in get_url(), get_user_input(), and 
+First of all DATA collection; this happens in set_url(), get_user_input(), and 
 get_save_path() To assign the values of self.url, self.data_list and save respectively.
 
 Our goal is to pass these data to our spider, but we can't jsut make a global variables

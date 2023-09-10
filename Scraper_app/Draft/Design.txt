@@ -13,7 +13,17 @@ Have fields for:
 
 
 # Script Generation:
-	generate the scraping code dynamically.
+	√ generate the scraping code dynamically:
+	
+	Later: RE construction of ui:
+	Custom widgets for parent, with tree of children tags
+	
+	IMPORTSNT:
+	1- Allow subs for the elements:
+	some sites provide same info in different divs or elements depending on many factors (ex: older job applications or prices are in different div than newer ones)
+	- So in this case allow user to enter 2 or 3 subs
+	
+	2- Fix the problem of CrawlerProcess (CrawlerRunner may help)
 
 
 # Output File Generation:
@@ -49,3 +59,5 @@ Have fields for:
 	JavaScript Rendering: integrating a headless browser like Selenium or using Scrapy.
 	Regular Expressions.
 	Give an option to save the generated script for future use.
+	
+	
