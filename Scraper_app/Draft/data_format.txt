@@ -1,7 +1,43 @@
-Data Format:
+In [29]: for div in divs:
+    ...:     print(''.join(div.xpath(f'{span_selector}/text()').getall()))
+    ...:
+Dokki, Giza, Egypt
+Maadi, Cairo, Egypt
+Heliopolis, Cairo, Egypt
+Sheikh Zayed, Giza, Egypt
+Sidon, Lebanon
+Riyadh, Saudi Arabia
+Riyadh, Saudi Arabia
+Cairo, Egypt
+Maadi, Cairo, Egypt
+Heliopolis, Cairo, Egypt
+Maadi, Cairo, Egypt
+Cairo, Egypt
+Heliopolis, Cairo, Egypt
+Maadi, Cairo, Egypt
+New Nozha, Cairo, Egypt
 
-[
-	{tag:tag_v, attr:attr_type, attr_v:value, col:col_value}, 
-	{__:__, __:__, __:__, __:__}, 
-	....
-]
+In [30]: for div in divs:
+    ...:     print(''.join(div.xpath(f'{a_selector}/text()').getall()))
+    ...:
+Senior Python / Django Developer -Part TimeExperienced · IT/Software Development · Engineering - Telecom/Technology
+Senior Python DeveloperExperienced · IT/Software Development · Engineering - Telecom/Technology
+Senior Python DeveloperExperienced · IT/Software Development
+Senior Python DeveloperExperienced · IT/Software Development
+Senior Python DeveloperExperienced · IT/Software Development
+Senior Software Engineer (Python)Experienced · IT/Software Development · Engineering - Telecom/Technology
+Software Engineer (Python)Experienced · IT/Software Development · Engineering - Telecom/Technology
+Senior Backend Engineer / Python - Flying PharmacistNot specified · IT/Software Development · Analyst/Research · Engineering - Telecom/Technology
+Backend Engineering Manager (Python)Manager · IT/Software Development · Engineering - Telecom/Technology · Engineering - Other
+Senior Python Django DeveloperExperienced · IT/Software Development
+Python DeveloperExperienced · IT/Software Development
+Senior Full Stack React/ Python (Django) Developer - RemoteExperienced · IT/Software Development · Engineering - Telecom/Technology
+Python DeveloperExperienced · Installation/Maintenance/Repair · IT/Software Development · Engineering - Telecom/Technology
+Python DeveloperExperienced · IT/Software Development · Engineering - Telecom/Technology
+Senior Odoo Developer - (Onsite)Experienced · Installation/Maintenance/Repair · IT/Software Development · Engineering - Telecom/Technology
+
+In [31]: a_selector
+Out[31]: './/a[@class="css-o171kl"]'
+
+In [32]: span_selector
+Out[32]: './/span[@class="css-5wys0k"]'

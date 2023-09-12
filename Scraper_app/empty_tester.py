@@ -46,13 +46,13 @@ class MainApp(QMainWindow):
     # running app instance
     def set_url(self):
         """Fetch start url"""
-        self.url = self.lineEdit.text()
+        self.url = self.lineEdit.text().strip()
     
     def set_parent(self):
         """Parent element attributes"""
-        self.parent_tag = self.lineEdit_2.text()
-        self.parent_attr = self.lineEdit_3.text()
-        self.parent_attr_value = self.lineEdit_4.text().replace(' ', '.')
+        self.parent_tag = self.lineEdit_2.text().strip()
+        self.parent_attr = self.lineEdit_3.text().strip()
+        self.parent_attr_value = self.lineEdit_4.text().strip().replace(' ', '.')
         
     def get_user_input(self):
         """Retrieve data from QlineEdit widgets in a custom Listitem Widget"""
@@ -62,10 +62,10 @@ class MainApp(QMainWindow):
             item = self.listWidget.item(i)
             custom = self.listWidget.itemWidget(item) #*
             
-            tag_elem = custom.tag_element.text()
-            elem_attr = custom.elem_attr.text()
-            attr_value = custom.attr_value.text().replace(' ', '.')
-            column_name = custom.column_name.text()
+            tag_elem = custom.tag_element.text().strip()
+            elem_attr = custom.elem_attr.text().strip()
+            attr_value = custom.attr_value.text().strip().replace(' ', '.')
+            column_name = custom.column_name.text().strip()
             
             data = {
             "tag": tag_elem,

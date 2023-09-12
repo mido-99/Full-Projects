@@ -23,7 +23,10 @@ Have fields for:
 	some sites provide same info in different divs or elements depending on many factors (ex: older job applications or prices are in different div than newer ones)
 	- So in this case allow user to enter 2 or 3 subs
 	
-	2- Fix the problem of CrawlerProcess (CrawlerRunner may help)
+	2- Add a button for removing a field
+	3- Fix the problem of CrawlerProcess (CrawlerRunner may help)
+	4- Use xpath for more reliability, and to fix the issue of
+	nested text, point 2 can help to strictly determine elements
 
 
 # Output File Generation:
