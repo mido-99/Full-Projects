@@ -1,5 +1,4 @@
 import scrapy
-# from empty_tester import url
 from globals import main_app_instance
 
 (url, data_list, parent_tag, parent_attr, 
@@ -19,12 +18,9 @@ class Scraper(scrapy.Spider):
             for diction in data_list:   # data_list is a list of dicts, each dict has info for an item in the parent element
                 print(''.join(
                     parent.xpath(
-                    f'''//./{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"]/text()''').getall()
+                    f'''string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])''').get()
                     ))
                 
-        
-        # for h in response.css('h2.css-m604qf'):
-        #     print(h.css('a::text').get())
 
 '''
 # Tests:

@@ -6,6 +6,10 @@ Have fields for:
 	√ HTML tags and optional attributes
 	√ Output column name
 	√ Save location and output format (CSV, JSON, JSONL)
+	√ Add a button for removing a field
+	- Allow subs for the elements:
+	some sites provide same info in different divs or elements depending on many factors (ex: older job applications or prices are in different div than newer ones)
+	So in this case allow user to enter 2 or 3 subs
 
 
 # Backend Functionality:
@@ -14,19 +18,16 @@ Have fields for:
 
 # Script Generation:
 	√ generate the scraping code dynamically:
-	
-	Later: RE construction of ui:
-	Custom widgets for parent, with tree of children tags
-	
-	IMPORTSNT:
-	1- Allow subs for the elements:
-	some sites provide same info in different divs or elements depending on many factors (ex: older job applications or prices are in different div than newer ones)
-	- So in this case allow user to enter 2 or 3 subs
-	
-	2- Add a button for removing a field
-	3- Fix the problem of CrawlerProcess (CrawlerRunner may help)
-	4- Use xpath for more reliability, and to fix the issue of
+	√ Use xpath for more reliability, and to fix the issue of
 	nested text, point 2 can help to strictly determine elements
+	
+	- Fix the problem of CrawlerProcess (CrawlerRunner may help).
+	- Regular Expressions should be used for:
+		- character replacement:
+		import re
+		s = "Hello! This is a test-$string!"
+		s = re.sub(r'[$\-!]', '', s)
+		print(s)  # "Hello This is a teststring"
 
 
 # Output File Generation:
@@ -60,7 +61,8 @@ Have fields for:
 	Allow users to set custom headers and user-agents.
 	Rate Limiting: Integrate a delay mechanism to avoid hitting websites too frequently.
 	JavaScript Rendering: integrating a headless browser like Selenium or using Scrapy.
-	Regular Expressions.
 	Give an option to save the generated script for future use.
-	
-	
+
+
+IMPORTSNT:
+
