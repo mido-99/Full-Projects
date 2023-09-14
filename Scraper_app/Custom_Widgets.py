@@ -1,15 +1,15 @@
-from PyQt6 import QtWidgets
+from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLineEdit, QPushButton, QListWidgetItem
 from PyQt6.QtGui import QAction
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSize
 
 
-class CustomListItem(QtWidgets.QWidget):
+class CustomListItem(QWidget):
     """Custom List item for entering html tags data for Scraping"""
     
     def __init__(self):
         super().__init__()
         
-        self.allQBoxLayout = QtWidgets.QHBoxLayout()
+        self.allQBoxLayout = QHBoxLayout()
         self.setLayout(self.allQBoxLayout)
         
         self.Create_widgets()
@@ -18,17 +18,17 @@ class CustomListItem(QtWidgets.QWidget):
 
     def Create_widgets(self):
         """Create children widgets of the list items"""
-
+        
         # Main Scraping fields
-        self.tag_element = QtWidgets.QLineEdit()
-        self.elem_attr = QtWidgets.QLineEdit()
-        self.attr_value = QtWidgets.QLineEdit()
-        self.column_name = QtWidgets.QLineEdit()
+        self.tag_element = QLineEdit()
+        self.elem_attr = QLineEdit()
+        self.attr_value = QLineEdit()
+        self.column_name = QLineEdit()
 
         # Delete button
-        self.delete_btn = QtWidgets.QPushButton('X', self)
+        self.delete_btn = QPushButton('X', self)
         self.delete_btn.clicked.connect(self.delete_self)
-        self.delete_btn.setFixedSize(25, 25)
+        self.delete_btn.setFixedSize(20, 20)
         self.delete_btn.setStyleSheet('background-color: red; color: white; border:none; '
                                     'border-radius: 10; font-style: bold'
                                     )
@@ -94,14 +94,27 @@ class CustomListItem(QtWidgets.QWidget):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
     
     def add_alt(self):
-        pass
+        index = self.get_current_item_and_index()[1]
+        sub_item = SubListItem()
+        list_item = QListWidgetItem(self.list_widget)
+        list_item.setSizeHint(QSize(400, 40))
+        self.list_widget.setItemWidget(list_item, sub_item)
+        
+        self.list_widget.insertItem(index + 1, list_item)
     
     def replace_txt(self):
         pass
     
     def write_py_code(self):
         pass
+
+
+class SubListItem(CustomListItem):
     
+    def __init__(self):
+        super().__init__()
+        
+        self.setStyleSheet('background-color: yellow; ')
 
 
 """
