@@ -28,6 +28,7 @@ Have fields for:
 		s = "Hello! This is a test-$string!"
 		s = re.sub(r'[$\-!]', '', s)
 		print(s)  # "Hello This is a teststring"
+	- Literal python code injection into beginning or end of line
 
 
 # Output File Generation:
@@ -65,4 +66,3 @@ Have fields for:
 
 
 IMPORTSNT:
-
