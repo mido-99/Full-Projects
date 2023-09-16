@@ -10,7 +10,7 @@ Have fields for:
 	√ Allow subs for the elements:
 	some sites provide same info in different divs or elements depending on many factors (ex: older job applications or prices are in different div than newer ones)
 	So in this case allow user to enter 2 or 3 subs
-	- Fix sub added to end of list
+	√ Fix sub added to end of list
 
 # Backend Functionality:
 	√ scrapy

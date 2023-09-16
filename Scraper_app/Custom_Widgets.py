@@ -88,19 +88,22 @@ class CustomListItem(QWidget):
         
         add_alt_action.triggered.connect(self.add_alt)
         replace_txt_action.triggered.connect(self.replace_txt)
-        add_alt_action.triggered.connect(self.write_py_code)
+        write_py_action.triggered.connect(self.write_py_code)
         delete_item.triggered.connect(self.delete_self)
         
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
     
     def add_alt(self):
-        index = self.get_current_item_and_index()[1]
-        sub_item = SubListItem()
-        list_item = QListWidgetItem(self.list_widget)
-        list_item.setSizeHint(QSize(400, 40))
-        self.list_widget.setItemWidget(list_item, sub_item)
+        """Add an alternate scraping data to be used if the main failed"""
         
+        index = self.get_current_item_and_index()[1]    # get index of current item
+        
+        sub_item = SubListItem()
+        list_item = QListWidgetItem()   #*2
         self.list_widget.insertItem(index + 1, list_item)
+        list_item.setSizeHint(QSize(400, 40))
+        
+        self.list_widget.setItemWidget(list_item, sub_item)    
     
     def replace_txt(self):
         pass
@@ -110,11 +113,31 @@ class CustomListItem(QWidget):
 
 
 class SubListItem(CustomListItem):
-    
+    """Alternate data scraping Class. Same like its parent with removal of uselesses"""
+
     def __init__(self):
         super().__init__()
         
-        self.setStyleSheet('background-color: yellow; ')
+        self.setStyleSheet('''QLineEdit {background-color: #D3D3D3}''')
+
+    def Context_Menu(self):
+        """Same as its parent with add_sub removed. of course we don't need unlimited
+        subs right? """
+        
+        # ContextMenu Actions
+        replace_txt_action = QAction("replace text", self)
+        write_py_action = QAction("write python code", self)
+        delete_item = QAction("delete", self)
+        
+        self.addAction(replace_txt_action)
+        self.addAction(write_py_action)
+        self.addAction(delete_item)
+        
+        replace_txt_action.triggered.connect(self.replace_txt)
+        write_py_action.triggered.connect(self.write_py_code)
+        delete_item.triggered.connect(self.delete_self)
+        
+        self.setContextMenuPolicy(Qt.ContextMenuPolicy.ActionsContextMenu)
 
 
 """
@@ -124,5 +147,11 @@ clicked (may be another item is selected, and actually this is a custom widget (
 not a QlistItem so either reasons it won't work)
 So in this methhod I'm iterating through these custom widgets, converting them into 
 list items, and checking whether they're the current object (self). if so.. so be it.
+
+#*2:
+NOTE In this line I'm not specifying the parent list_widget class in the same line, 
+as this automatically adds the new list_item into the list bottom. So I use insertItem
+in the next line where I can insert it just below the right-clicked item.
+
 
 """
