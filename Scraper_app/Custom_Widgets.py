@@ -1,6 +1,7 @@
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QLineEdit, QPushButton, QListWidgetItem
 from PyQt6.QtGui import QAction
 from PyQt6.QtCore import Qt, QSize
+from globals import Sub_Role
 
 
 class CustomListItem(QWidget):
@@ -72,7 +73,8 @@ class CustomListItem(QWidget):
         index = self.get_current_item_and_index()[1]
         self.list_widget.takeItem(index)
     
-    # ContextMenu methods
+    
+    ## ContextMenu methods ##
     def Context_Menu(self):
         
         # ContextMenu Actions
@@ -101,8 +103,9 @@ class CustomListItem(QWidget):
         sub_item = SubListItem()
         list_item = QListWidgetItem()   #*2
         self.list_widget.insertItem(index + 1, list_item)
+        list_item.setData(Sub_Role, True)
+
         list_item.setSizeHint(QSize(400, 40))
-        
         self.list_widget.setItemWidget(list_item, sub_item)    
     
     def replace_txt(self):
@@ -123,7 +126,7 @@ class SubListItem(CustomListItem):
     def Context_Menu(self):
         """Same as its parent with add_sub removed. of course we don't need unlimited
         subs right? """
-        
+
         # ContextMenu Actions
         replace_txt_action = QAction("replace text", self)
         write_py_action = QAction("write python code", self)

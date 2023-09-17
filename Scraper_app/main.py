@@ -8,6 +8,7 @@ from Custom_Widgets import CustomListItem
 # from pathlib import Path
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from globals import Main_Role, Sub_Role
 
 
 class MainApp(QMainWindow):
@@ -27,16 +28,18 @@ class MainApp(QMainWindow):
         self.pushButton_2.clicked.connect(self.add_field)
         self.pushButton.clicked.connect(self.get_save_path)
         self.pushButton_3.clicked.connect(self.start_crawling)  #*2
+        # self.pushButton_3.clicked.connect(self.dummy_method) 
         
         
     def add_field(self):
         """Add a new field to the list when user clicks add"""
 
         myCustomListItem = CustomListItem()
+        list_widget = QListWidgetItem(self.listWidget)
+        list_widget.setData(Main_Role, True)
         
-        myQlistItem = QListWidgetItem(self.listWidget)
-        myQlistItem.setSizeHint(QSize(400, 50))
-        self.listWidget.setItemWidget(myQlistItem, myCustomListItem)
+        list_widget.setSizeHint(QSize(400, 50))
+        self.listWidget.setItemWidget(list_widget, myCustomListItem)
     
     # These setters and getters are used to retrieve data in spider file from current 
     # running app instance
@@ -60,6 +63,13 @@ class MainApp(QMainWindow):
             item = self.listWidget.item(i)
             custom = self.listWidget.itemWidget(item) #*
             
+            # check if listItem is main or sub
+            if item.data(Main_Role):
+                item_type = 'main'
+            elif item.data(Sub_Role):
+                item_type = 'sub'
+            
+            # Getting info from lineEdits
             tag_elem = custom.tag_element.text().strip()
             elem_attr = custom.elem_attr.text().strip()
             attr_value = custom.attr_value.text().strip().replace(' ', '.')
@@ -69,7 +79,8 @@ class MainApp(QMainWindow):
             "tag": tag_elem,
             "elem_attr": elem_attr,
             "attr_value": attr_value,
-            "column": column_name
+            "column": column_name,
+            "type": item_type
             }
             self.data_list.append(data)
     
@@ -100,6 +111,10 @@ class MainApp(QMainWindow):
             process.start()
             
             self.data_list.clear()
+    
+    def dummy_method(self):
+        self.get_user_input()
+        print(self.data_list)
 
 
 import globals
