@@ -2,25 +2,28 @@
 	√ PyQt
 
 Have fields for:
-√ Website URL
+	√ Website URL
 	√ HTML tags and optional attributes
 	√ Output column name
 	√ Save location and output format (CSV, JSON, JSONL)
+	
 	√ Add a button for removing a field
 	√ Allow subs for the elements:
-	√ Fix sub added to end of list
+	Construct widgets for replace_text 
+	Construct widgets for py_inject
+	
 
 # Backend Functionality:
 	√ scrapy
 	Add Next button feature
+	√ Fix sub added to end of list
+	- Fix the problem of CrawlerProcess (CrawlerRunner may help).
 
 
 # Script Generation:
 	√ generate the scraping code dynamically:
-	√ Use xpath for more reliability, and to fix the issue of
-	nested text, point 2 can help to strictly determine elements
+	√ Use xpath for more reliability, fix the issue of nested text
 	
-	- Fix the problem of CrawlerProcess (CrawlerRunner may help).
 	- REGEX should be used for:
 		- character replacement:
 		import re

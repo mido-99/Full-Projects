@@ -57,6 +57,9 @@ css-o171kl
 location span:
 css-5wys0k
 
+price in Diff divs site:
+https://www.theperfumeshop.com/marc-jacobs/b/50/womens-fragrances/perfect/bc/marcJacobsPerfect?query=:ranking
+
 '''
 
 #* The order of conditions:
