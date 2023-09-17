@@ -1,15 +1,11 @@
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
-from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidget, QListWidgetItem, 
-QMessageBox, QFileDialog)
-# from PyQt6.uic.load_ui import loadUiType
+from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidgetItem, QFileDialog)
 from PyQt6.uic import loadUi
-from Custom_Widgets import CustomListItem
-# from pathlib import Path
+from custom_widgets.q_list_item import CustomListItem
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from globals import Main_Role, Sub_Role
-
 
 class MainApp(QMainWindow):
     
