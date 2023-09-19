@@ -25,8 +25,8 @@ class Scraper(scrapy.Spider):
                 if diction['type'] == 'main':
                     
                     item_Xpath =f"""
-                            string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])
-                            """.strip()
+                        string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])
+                        """.strip()
                     
                     result = ''.join(parent.xpath(item_Xpath).get())
                     print(result)
@@ -35,8 +35,8 @@ class Scraper(scrapy.Spider):
                         
                         diction = data_list[i+1]
                         item_Xpath =f"""
-                                string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])
-                                """.strip()      #*2
+                            string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])
+                            """.strip()      #*2
                         
                         result = ''.join(parent.xpath(item_Xpath).get())
                         print(result)

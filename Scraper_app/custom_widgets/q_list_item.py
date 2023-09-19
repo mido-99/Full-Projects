@@ -3,10 +3,10 @@ QListWidgetItem, QVBoxLayout)
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import Qt, QSize
 from .q_dialog import CustomDialog
-from globals import Main_Role, Sub_Role
+from globals import Sub_Role
 
 CLOSE_ICON = 'icons/close.jpeg'
-SETTING_ICON = 'icons/setting.png'
+SETTING_ICON = 'icons/icons8-3-dots-50 (1).png'  #"https://icons8.com/icon/36944/ellipsis"
 
 
 class CustomListItem(QWidget):
@@ -14,6 +14,8 @@ class CustomListItem(QWidget):
     
     def __init__(self):
         super().__init__()
+        
+        self.replace_tuple = None  #Tuple of text to be replaced in scraped text
         
         self.Create_widgets()
         self.Context_Menu()
@@ -27,9 +29,10 @@ class CustomListItem(QWidget):
         
         self.text_layout = QHBoxLayout()
         self.btns_layout = QVBoxLayout()
+        self.btns_layout.setSpacing(1)
         
         self.allLayout.addLayout(self.text_layout)
-        self.allLayout.addLayout(self.btns_layout, 2)
+        self.allLayout.addLayout(self.btns_layout)
         
         # Main Scraping fields
         self.tag_element = QLineEdit()
@@ -41,14 +44,14 @@ class CustomListItem(QWidget):
         self.delete_btn = QPushButton()
         self.delete_btn.clicked.connect(self.delete_self)
         self.delete_btn.setIcon(QIcon(CLOSE_ICON))
-        self.delete_btn.setStyleSheet('border:none; border-radius: 5; ')
+        self.delete_btn.setStyleSheet('border-radius: 5; ')
         
-        # Setting Button
-        self.setting_btn = QPushButton()
-        # self.delete_btn.clicked.connect(self.delete_self)
-        self.setting_btn.setIcon(QIcon(SETTING_ICON))
-        self.setting_btn.setStyleSheet('border:none; border-radius: 5; ')
-        
+        # Setting Button 
+        # self.setting_btn = QPushButton()
+        # self.setting_btn.clicked.connect(self.Context_Menu)
+        # self.setting_btn.setIcon(QIcon(SETTING_ICON))
+        # self.setting_btn.setStyleSheet('border-radius: 5; ')
+        #! Deprecated till I find a use
         
         # Add elements to widget layout
         self.text_layout.addWidget(self.tag_element)
@@ -56,7 +59,7 @@ class CustomListItem(QWidget):
         self.text_layout.addWidget(self.attr_value)
         self.text_layout.addWidget(self.column_name)
         
-        self.btns_layout.addWidget(self.setting_btn)
+        # self.btns_layout.addWidget(self.setting_btn)
         self.btns_layout.addWidget(self.delete_btn)
         
         # Setting placeholders
@@ -80,6 +83,8 @@ class CustomListItem(QWidget):
 
         
     def get_current_item_and_index(self):   #*
+        """Returns the current (QListItem) widget instance and its row number"""
+        
         self.list_widget = self.parent().parent()
         
         for i in range(self.list_widget.count()):
@@ -124,18 +129,21 @@ class CustomListItem(QWidget):
         self.list_widget.insertItem(index + 1, list_item)
         list_item.setData(Sub_Role, True)
 
-        list_item.setSizeHint(QSize(400, 40))
+        list_item.setSizeHint(QSize(400, 50))
         self.list_widget.setItemWidget(list_item, sub_item)    
     
     def replace_txt(self):
         """Replace literal text in the scraped data with the given text"""
         
         custom_dialog = CustomDialog()
-        result = custom_dialog.exec()
-        #TODO listItem.checked() and listItem.store_replace_in_child_widget
         
-        if result == custom_dialog.DialogCode.Accepted:
-            print(custom_dialog.get_input())
+        if self.replace_tuple is not None:      # if user entered some text already; fill inputs
+            custom_dialog.set_input(*self.replace_tuple)
+        
+        result = custom_dialog.exec()
+        
+        if result == custom_dialog.DialogCode.Accepted:     # if Ok clicked
+            self.replace_tuple = custom_dialog.get_input()
     
     def write_py_code(self):
         pass

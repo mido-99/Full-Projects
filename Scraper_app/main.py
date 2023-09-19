@@ -37,7 +37,7 @@ class MainApp(QMainWindow):
         list_widget = QListWidgetItem(self.listWidget)
         list_widget.setData(Main_Role, True)
         
-        list_widget.setSizeHint(QSize(400, 50))
+        list_widget.setSizeHint(QSize(400, 60))
         self.listWidget.setItemWidget(list_widget, myCustomListItem)
     
     # These setters and getters are used to retrieve data in spider file from current 
@@ -61,25 +61,27 @@ class MainApp(QMainWindow):
         for i in range(self.listWidget.count()):
             item = self.listWidget.item(i)
             custom = self.listWidget.itemWidget(item) #*
-            
+
             # check if listItem is main or sub
             if item.data(Main_Role):
                 item_type = 'main'
             elif item.data(Sub_Role):
                 item_type = 'sub'
-            
+
             # Getting info from lineEdits
             tag_elem = custom.tag_element.text().strip()
             elem_attr = custom.elem_attr.text().strip()
             attr_value = custom.attr_value.text().strip().replace(' ', '.')
             column_name = custom.column_name.text().strip()
-            
+            replace_tuple = custom.replace_tuple
+
             data = {
-            "tag": tag_elem,
-            "elem_attr": elem_attr,
-            "attr_value": attr_value,
-            "column": column_name,
-            "type": item_type
+                "tag": tag_elem,
+                "elem_attr": elem_attr,
+                "attr_value": attr_value,
+                "column": column_name,
+                "type": item_type,
+                "replace": replace_tuple or None,
             }
             self.data_list.append(data)
     

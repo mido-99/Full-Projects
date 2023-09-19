@@ -12,6 +12,10 @@ Have fields for:
 	√ Construct widgets for replace_text 
 	Construct widgets for py_inject
 	
+Enhancements:
+	When main item (x) is clicked delete child
+	Warning before deletion (message_box)
+	
 
 # Backend Functionality:
 	√ scrapy
