@@ -9,7 +9,7 @@ Have fields for:
 	
 	√ Add a button for removing a field
 	√ Allow subs for the elements:
-	Construct widgets for replace_text 
+	√ Construct widgets for replace_text 
 	Construct widgets for py_inject
 	
 
@@ -23,6 +23,7 @@ Have fields for:
 # Script Generation:
 	√ generate the scraping code dynamically:
 	√ Use xpath for more reliability, fix the issue of nested text
+	Restructure spider parse() after app works with yield and columns
 	
 	- REGEX should be used for:
 		- character replacement:

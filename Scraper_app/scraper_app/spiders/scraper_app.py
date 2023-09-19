@@ -4,9 +4,6 @@ from globals import main_app_instance
 (url, data_list, parent_tag, parent_attr, 
 parent_attr_value) = main_app_instance.get_data()
 
-# Xpath to be used for finding parent elements
-parent_Xpath = f'''//{parent_tag}[@{parent_attr}="{parent_attr_value}"]'''    # ex:'//div[@class="css-12345"]'
-
 
 class Scraper(scrapy.Spider):
     name = 'scraper_app'
@@ -20,7 +17,7 @@ class Scraper(scrapy.Spider):
         # data_list is a list of dicts, each dict has info for an item
         # in the parent element
 
-        for parent in response.xpath(parent_Xpath): 
+        for parent in self.parse_parents():
             
             for i in range(data_list_len):    # data_list is a list of dicts, each dict has info for an item in the parent element
                 diction = data_list[i]
@@ -44,6 +41,13 @@ class Scraper(scrapy.Spider):
                         result = ''.join(parent.xpath(item_Xpath).get())
                         print(result)
                         i += 1      #*3
+        
+    def parse_parents(self, response):
+        """Fetch parent elements from which children items will be scraped""" 
+        
+        parent_Xpath = f'''//{parent_tag}[@{parent_attr}="{parent_attr_value}"]'''    # ex:'//div[@class="css-12345"]'
+        return response.xpath(parent_Xpath)
+
 
 """
 '''

@@ -1,18 +1,19 @@
 from PyQt6.QtWidgets import (QWidget, QHBoxLayout, QLineEdit, QPushButton, 
-QListWidgetItem)
-from PyQt6.QtGui import QAction
+QListWidgetItem, QVBoxLayout)
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import Qt, QSize
 from .q_dialog import CustomDialog
-from globals import Sub_Role
+from globals import Main_Role, Sub_Role
+
+CLOSE_ICON = 'icons/close.jpeg'
+SETTING_ICON = 'icons/setting.png'
+
 
 class CustomListItem(QWidget):
     """Custom List item for entering html tags data for Scraping"""
     
     def __init__(self):
         super().__init__()
-        
-        self.allQBoxLayout = QHBoxLayout()
-        self.setLayout(self.allQBoxLayout)
         
         self.Create_widgets()
         self.Context_Menu()
@@ -21,25 +22,42 @@ class CustomListItem(QWidget):
     def Create_widgets(self):
         """Create children widgets of the list items"""
         
+        self.allLayout = QHBoxLayout()
+        self.setLayout(self.allLayout)
+        
+        self.text_layout = QHBoxLayout()
+        self.btns_layout = QVBoxLayout()
+        
+        self.allLayout.addLayout(self.text_layout)
+        self.allLayout.addLayout(self.btns_layout, 2)
+        
         # Main Scraping fields
         self.tag_element = QLineEdit()
         self.elem_attr = QLineEdit()
         self.attr_value = QLineEdit()
         self.column_name = QLineEdit()
 
-        # Delete button
-        self.delete_btn = QPushButton('X', self)
+        # Delete Button
+        self.delete_btn = QPushButton()
         self.delete_btn.clicked.connect(self.delete_self)
-        self.delete_btn.setFixedSize(20, 20)
-        self.delete_btn.setStyleSheet('background-color: red; color: white; border:none; '
-                                    'border-radius: 10; font-style: bold'
-                                    )
+        self.delete_btn.setIcon(QIcon(CLOSE_ICON))
+        self.delete_btn.setStyleSheet('border:none; border-radius: 5; ')
+        
+        # Setting Button
+        self.setting_btn = QPushButton()
+        # self.delete_btn.clicked.connect(self.delete_self)
+        self.setting_btn.setIcon(QIcon(SETTING_ICON))
+        self.setting_btn.setStyleSheet('border:none; border-radius: 5; ')
+        
+        
         # Add elements to widget layout
-        self.allQBoxLayout.addWidget(self.tag_element)
-        self.allQBoxLayout.addWidget(self.elem_attr)
-        self.allQBoxLayout.addWidget(self.attr_value)
-        self.allQBoxLayout.addWidget(self.column_name)
-        self.allQBoxLayout.addWidget(self.delete_btn)
+        self.text_layout.addWidget(self.tag_element)
+        self.text_layout.addWidget(self.elem_attr)
+        self.text_layout.addWidget(self.attr_value)
+        self.text_layout.addWidget(self.column_name)
+        
+        self.btns_layout.addWidget(self.setting_btn)
+        self.btns_layout.addWidget(self.delete_btn)
         
         # Setting placeholders
         self.setPlaceHolder_tag_elem('tag element')
@@ -114,6 +132,7 @@ class CustomListItem(QWidget):
         
         custom_dialog = CustomDialog()
         result = custom_dialog.exec()
+        #TODO listItem.checked() and listItem.store_replace_in_child_widget
         
         if result == custom_dialog.DialogCode.Accepted:
             print(custom_dialog.get_input())

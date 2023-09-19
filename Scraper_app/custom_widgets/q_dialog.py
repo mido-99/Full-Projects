@@ -38,3 +38,9 @@ class CustomDialog(QDialog):
     def get_input(self):
         
         return self.line_edit_1.text(), self.line_edit_2.text()
+    
+    def set_input(self, replace_txt, with_txt):
+        """fill the dialog line eidts with pre-added values if exists"""
+        
+        self.line_edit_1.setText(replace_txt)
+        self.line_edit_2.setText(with_txt)

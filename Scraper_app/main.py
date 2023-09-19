@@ -7,6 +7,9 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from globals import Main_Role, Sub_Role
 
+APP_ICON = 'icons/scraper.png'
+
+
 class MainApp(QMainWindow):
     
     def __init__(self):
@@ -18,13 +21,13 @@ class MainApp(QMainWindow):
         
     def handle_ui(self):
         self.setWindowTitle('Scraper')
-        self.setWindowIcon(QIcon('scraper.png'))
+        self.setWindowIcon(QIcon(APP_ICON))
     
     def handle_buttons(self):
         self.pushButton_2.clicked.connect(self.add_field)
         self.pushButton.clicked.connect(self.get_save_path)
-        self.pushButton_3.clicked.connect(self.start_crawling)  #*2
-        # self.pushButton_3.clicked.connect(self.dummy_method) 
+        # self.pushButton_3.clicked.connect(self.start_crawling)  #*2
+        self.pushButton_3.clicked.connect(self.dummy_method)
         
         
     def add_field(self):
@@ -93,6 +96,12 @@ class MainApp(QMainWindow):
         return (self.url, self.data_list, self.parent_tag, self.parent_attr, 
                 self.parent_attr_value)
 
+    def validate_input(self):
+        """Validate user input fields before starting spider to raise related error
+        messageBox or warning"""
+
+        pass
+
     def start_crawling(self):
         """Method chain activator"""
         
@@ -109,8 +118,8 @@ class MainApp(QMainWindow):
             self.data_list.clear()
     
     def dummy_method(self):
-        self.get_user_input()
-        print(self.data_list)
+        self.pushButton.setEnabled(not self.pushButton.isEnabled())
+        print(self.pushButton.isEnabled())
 
 
 import globals
