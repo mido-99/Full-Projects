@@ -1,4 +1,5 @@
 import scrapy
+import re
 from globals import main_app_instance
 
 (url, data_list, parent_tag, parent_attr, 
@@ -12,41 +13,54 @@ class Scraper(scrapy.Spider):
 
     def parse(self, response):
         
-        i = 0
+        for parent in self.parse_parents(response):
+            
+            for selector in self.generate_selectors():
+                
+                if 'sub' in selector:
+                    main_txt = ''.join(parent.xpath(selector['main']).get())
+                    sub_txt = ''.join(parent.xpath(selector['sub']).get())
+                    result = main_txt or sub_txt
+                else:
+                    result = ''.join(parent.xpath(selector['main']).get())
+                
+                print(result)
+    
+    def generate_selectors(self):
+
         data_list_len =  len(data_list)
         # data_list is a list of dicts, each dict has info for an item
         # in the parent element
 
-        for parent in self.parse_parents():
+        i = 0
+        while i < data_list_len:# data_list is a list of dicts, each dict has info for an item in the parent element
+            diction = data_list[i]
+            next_diction = data_list[i + 1] if i + 1 < data_list_len else None
             
-            for i in range(data_list_len):    # data_list is a list of dicts, each dict has info for an item in the parent element
-                diction = data_list[i]
+            selector = {}
 
-                if diction['type'] == 'main':
-                    
-                    item_Xpath =f"""
-                        string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])
-                        """.strip()
-                    
-                    result = ''.join(parent.xpath(item_Xpath).get())
-                    print(result)
-                    
-                    if not result and i+1 < data_list_len and data_list[i+1]['type'] =='sub':     #*
-                        
-                        diction = data_list[i+1]
-                        item_Xpath =f"""
-                            string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])
-                            """.strip()      #*2
-                        
-                        result = ''.join(parent.xpath(item_Xpath).get())
-                        print(result)
-                        i += 1      #*3
-        
+            if diction['type'] == 'main' and next_diction and  next_diction['type'] == 'sub':   #*
+                
+                selector['sub'] = self.construct_xpath(diction)
+                i += 1      #*2
+
+            selector['main'] = self.construct_xpath(next_diction)
+            i += 1
+            
+            yield selector
+    
     def parse_parents(self, response):
         """Fetch parent elements from which children items will be scraped""" 
         
         parent_Xpath = f'''//{parent_tag}[@{parent_attr}="{parent_attr_value}"]'''    # ex:'//div[@class="css-12345"]'
         return response.xpath(parent_Xpath)
+    
+    @staticmethod
+    def construct_xpath(diction):
+
+        return f'''string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])'''
+        
+        
 
 
 """
@@ -69,9 +83,6 @@ https://www.theperfumeshop.com/marc-jacobs/b/50/womens-fragrances/perfect/bc/mar
 #* The order of conditions:
 NOTE we're checking the existence of i+1 before using it as index to aviod IndexError
 
-#*2 We have to reassign the value of the xpath selector as the variable holds older one
-
-#*3 Note +1 to pass the next list item, that will be a sub_item for surprise.
-
+#*2 Note +1 to pass the next list item, that will be a sub_item for surprise.
 
 """

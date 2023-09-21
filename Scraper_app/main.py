@@ -26,8 +26,8 @@ class MainApp(QMainWindow):
     def handle_buttons(self):
         self.pushButton_2.clicked.connect(self.add_field)
         self.pushButton.clicked.connect(self.get_save_path)
-        # self.pushButton_3.clicked.connect(self.start_crawling)  #*2
-        self.pushButton_3.clicked.connect(self.dummy_method)
+        self.pushButton_3.clicked.connect(self.start_crawling)  #*2
+        self.pushButton_4.clicked.connect(self.dummy_method)
         
         
     def add_field(self):
@@ -120,8 +120,8 @@ class MainApp(QMainWindow):
             self.data_list.clear()
     
     def dummy_method(self):
-        self.pushButton.setEnabled(not self.pushButton.isEnabled())
-        print(self.pushButton.isEnabled())
+        self.get_user_input()
+        print(self.data_list)
 
 
 import globals
