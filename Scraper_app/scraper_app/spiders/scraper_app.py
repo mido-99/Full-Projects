@@ -1,9 +1,11 @@
 import scrapy
-import re
 from globals import main_app_instance
+
 
 (url, data_list, parent_tag, parent_attr, 
 parent_attr_value) = main_app_instance.get_data()
+data_list_len =  len(data_list) # list of dicts, each dict has info for an item in the parent element
+
 
 
 class Scraper(scrapy.Spider):
@@ -12,25 +14,30 @@ class Scraper(scrapy.Spider):
     # start_urls = ['https://wuzzuf.net/search/jobs/?q=python&a=hpb']
 
     def parse(self, response):
-        
+        """fetches items in parents elements according to xpath selectors constructed
+        by user input. Tries to get the main item first, if failed or None sub item 
+        will be used"""
+
         for parent in self.parse_parents(response):
             
-            for selector in self.generate_selectors():
+            for index, selector in enumerate(self.generate_selectors()):
                 
                 if 'sub' in selector:
                     main_txt = ''.join(parent.xpath(selector['main']).get())
                     sub_txt = ''.join(parent.xpath(selector['sub']).get())
                     result = main_txt or sub_txt
                 else:
-                    result = ''.join(parent.xpath(selector['main']).get())
+                    result = ''.join(parent.xpath(selector['main']).get()).strip()
                 
-                print(result)
+                yield{
+                    'data': result,
+                    'replace': data_list[index].get('replace', None)
+                }
     
     def generate_selectors(self):
-
-        data_list_len =  len(data_list)
-        # data_list is a list of dicts, each dict has info for an item
-        # in the parent element
+        """Generator: It passes selectors directly to default parse method. 
+        Selectors are passed as dictionary; with the keys: 'main' or 'sub' for main
+        item and sub item respectively."""
 
         i = 0
         while i < data_list_len:# data_list is a list of dicts, each dict has info for an item in the parent element
@@ -41,10 +48,10 @@ class Scraper(scrapy.Spider):
 
             if diction['type'] == 'main' and next_diction and  next_diction['type'] == 'sub':   #*
                 
-                selector['sub'] = self.construct_xpath(diction)
+                selector['sub'] = self.construct_xpath(next_diction)
                 i += 1      #*2
 
-            selector['main'] = self.construct_xpath(next_diction)
+            selector['main'] = self.construct_xpath(diction)
             i += 1
             
             yield selector
@@ -57,6 +64,7 @@ class Scraper(scrapy.Spider):
     
     @staticmethod
     def construct_xpath(diction):
+        """Construct xpath string for selectors according to user input"""
 
         return f'''string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])'''
         
@@ -77,6 +85,12 @@ css-5wys0k
 
 price in Diff divs site:
 https://www.theperfumeshop.com/marc-jacobs/b/50/womens-fragrances/perfect/bc/marcJacobsPerfect?query=:ranking
+div:
+product-list-item__info
+price:
+price__current
+discount:
+discounted-price__price-current
 
 '''
 

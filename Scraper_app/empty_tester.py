@@ -1,7 +1,20 @@
 import re
 
-replace_lst = 'Heeey I"m txt To Be romved from chhccccc $'
+item = {
+    'data': 'Python',
+    'replace': ('P', "D")
+}
 
-txt = re.sub(r'[aBc$]', '', replace_lst)
+def replace_text(item):
+    
+    replace_setting = item['replace']
+    
+    if replace_setting:
+        pattern, repl = replace_setting
+        item['data'] = re.sub(pattern, repl, item['data'])
+    
+    # print(item['data'])
+    
+    return item
 
-print(txt)
+print(replace_text(item))
