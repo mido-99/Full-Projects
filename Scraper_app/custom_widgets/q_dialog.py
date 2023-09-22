@@ -14,9 +14,9 @@ class CustomDialog(QDialog):
         
         self.layout = QVBoxLayout()
         
-        self.label_1 = QLabel("Replace:")
+        self.label_1 = QLabel("Pattern:")
         self.line_edit_1 = QLineEdit(self)
-        self.label_2 = QLabel("with:")
+        self.label_2 = QLabel("Replace with:")
         self.line_edit_2 = QLineEdit(self)
         self.submit_btn = QPushButton('Ok', self)
         self.cancel_btn = QPushButton('Cancel', self)
@@ -43,8 +43,8 @@ class CustomDialog(QDialog):
             return self.line_edit_1.text(), self.line_edit_2.text()
         
     
-    def set_input(self, replace_txt, with_txt):
+    def set_input(self, text_1, text_2):
         """fill the dialog line eidts with pre-added values if exists"""
         
-        self.line_edit_1.setText(replace_txt)
-        self.line_edit_2.setText(with_txt)
+        self.line_edit_1.setText(text_1)
+        self.line_edit_2.setText(text_2)

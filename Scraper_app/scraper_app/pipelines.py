@@ -12,17 +12,17 @@ import re
 class ScraperAppPipeline:
     def process_item(self, item, spider):
         
-        self.replace_text(item)
+        self.apply_regex(item)
         
         return item
     
-    def replace_text(self, item):
-        """Replace text in scraped data with new text"""
+    def apply_regex(self, item):
+        """Apply regex to scraped item"""
         
-        replace_setting = item['replace']
+        regex_setting = item['regex']
         
-        if replace_setting:
-            pattern, repl = replace_setting
+        if regex_setting:
+            pattern, repl = regex_setting
             item['data'] = re.sub(pattern, repl, item['data'])
         
         print(item['data'], item['column'])

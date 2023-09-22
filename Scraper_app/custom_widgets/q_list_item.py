@@ -15,7 +15,7 @@ class CustomListItem(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.replace_tuple = None  #Tuple of text to be replaced in scraped text
+        self.regex_tuple = None  #Tuple of regex pattern to be used
         
         self.Create_widgets()
         self.Context_Menu()
@@ -103,17 +103,17 @@ class CustomListItem(QWidget):
         
         # ContextMenu Actions
         add_alt_action = QAction("add sub", self)
-        replace_txt_action = QAction("replace text", self)
+        apply_regex_action = QAction("apply regex", self)
         write_py_action = QAction("write python code", self)
         delete_item = QAction("delete", self)
         
         self.addAction(add_alt_action)
-        self.addAction(replace_txt_action)
+        self.addAction(apply_regex_action)
         self.addAction(write_py_action)
         self.addAction(delete_item)
         
         add_alt_action.triggered.connect(self.add_alt)
-        replace_txt_action.triggered.connect(self.replace_txt)
+        apply_regex_action.triggered.connect(self.apply_regex)
         write_py_action.triggered.connect(self.write_py_code)
         delete_item.triggered.connect(self.delete_self)
         
@@ -132,18 +132,18 @@ class CustomListItem(QWidget):
         list_item.setSizeHint(QSize(400, 50))
         self.list_widget.setItemWidget(list_item, sub_item)    
     
-    def replace_txt(self):
-        """Replace literal text in the scraped data with the given text"""
+    def apply_regex(self):
+        """Apply regex to replace text in the scraped data"""
         
         custom_dialog = CustomDialog()
         
-        if self.replace_tuple is not None:      # if user entered some text already; fill inputs
-            custom_dialog.set_input(*self.replace_tuple)
+        if self.regex_tuple is not None:      # if user entered some text already; fill inputs
+            custom_dialog.set_input(*self.regex_tuple)
         
         result = custom_dialog.exec()
         
         if result == custom_dialog.DialogCode.Accepted:     # if Ok clicked
-            self.replace_tuple = custom_dialog.get_input()
+            self.regex_tuple = custom_dialog.get_input()
     
     def write_py_code(self):
         pass
@@ -162,15 +162,15 @@ class SubListItem(CustomListItem):
         subs right? """
 
         # ContextMenu Actions
-        replace_txt_action = QAction("replace text", self)
+        apply_regex_action = QAction("apply RegEx", self)
         write_py_action = QAction("write python code", self)
         delete_item = QAction("delete", self)
         
-        self.addAction(replace_txt_action)
+        self.addAction(apply_regex_action)
         self.addAction(write_py_action)
         self.addAction(delete_item)
         
-        replace_txt_action.triggered.connect(self.replace_txt)
+        apply_regex_action.triggered.connect(self.apply_regex)
         write_py_action.triggered.connect(self.write_py_code)
         delete_item.triggered.connect(self.delete_self)
         

@@ -7,7 +7,6 @@ parent_attr_value) = main_app_instance.get_data()
 data_list_len =  len(data_list) # list of dicts, each dict has info for an item in the parent element
 
 
-
 class Scraper(scrapy.Spider):
     name = 'scraper_app'
     start_urls = [f'{url}']
@@ -27,14 +26,14 @@ class Scraper(scrapy.Spider):
 
                 if 'sub' in selector and not result:   # if there's a sub selector for current item
                     result = ''.join(parent.xpath(selector['sub']).get())
-                    repl_tuple = data_list[i+1].get('replace', None)
+                    regex_tuple = data_list[i+1].get('regex', None)
                     
                 else:
-                    repl_tuple = data_list[i].get('replace', None)
+                    regex_tuple = data_list[i].get('regex', None)
                 
                 yield {
                     'data' : result,
-                    'replace': repl_tuple,
+                    'regex': regex_tuple,
                     'column' : column,
                 }
     

@@ -73,7 +73,7 @@ class MainApp(QMainWindow):
             elem_attr = custom.elem_attr.text().strip()
             attr_value = custom.attr_value.text().strip().replace(' ', '.')
             column_name = custom.column_name.text().strip()
-            replace_tuple = custom.replace_tuple
+            regex_tuple = custom.regex_tuple
 
             data = {
                 "tag": tag_elem,
@@ -81,7 +81,7 @@ class MainApp(QMainWindow):
                 "attr_value": attr_value,
                 "column": column_name,
                 "type": item_type,
-                "replace": replace_tuple or None,
+                "regex": regex_tuple or None,
             }
             self.data_list.append(data)
     
