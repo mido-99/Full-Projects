@@ -20,18 +20,22 @@ class Scraper(scrapy.Spider):
 
         for parent in self.parse_parents(response):
             
-            for index, selector in enumerate(self.generate_selectors()):
+            for i, selector in enumerate(self.generate_selectors()):
                 
-                if 'sub' in selector:
-                    main_txt = ''.join(parent.xpath(selector['main']).get())
-                    sub_txt = ''.join(parent.xpath(selector['sub']).get())
-                    result = main_txt or sub_txt
+                result = ''.join(parent.xpath(selector['main']).get()).strip()
+                column = f'{data_list[i].get("column")}'
+
+                if 'sub' in selector and not result:   # if there's a sub selector for current item
+                    result = ''.join(parent.xpath(selector['sub']).get())
+                    repl_tuple = data_list[i+1].get('replace', None)
+                    
                 else:
-                    result = ''.join(parent.xpath(selector['main']).get()).strip()
+                    repl_tuple = data_list[i].get('replace', None)
                 
-                yield{
-                    'data': result,
-                    'replace': data_list[index].get('replace', None)
+                yield {
+                    'data' : result,
+                    'replace': repl_tuple,
+                    'column' : column,
                 }
     
     def generate_selectors(self):
@@ -91,7 +95,8 @@ price:
 price__current
 discount:
 discounted-price__price-current
-
+example discount:
+Only £81.00 
 '''
 
 #* The order of conditions:

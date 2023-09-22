@@ -15,6 +15,8 @@ Have fields for:
 Enhancements:
 	When main item (x) is clicked delete child
 	Warning before deletion (message_box)
+	Confirmation message before Start
+	Loading sign while spider crawls
 	
 
 # Backend Functionality:
@@ -27,16 +29,11 @@ Enhancements:
 # Script Generation:
 	√ generate the scraping code dynamically:
 	√ Use xpath for more reliability, fix the issue of nested text
+	√ Refractor parse()
+	Literal python code injection into beginning or end of line
 	Restructure spider parse() after app works with yield and columns
+	Regex integration
 	
-	- REGEX should be used for:
-		- character replacement:
-		import re
-		s = "Hello! This is a test-$string!"
-		s = re.sub(r'[$\-!]', '', s)
-		print(s)  # "Hello This is a teststring"
-	- Literal python code injection into beginning or end of line
-
 
 # Output File Generation:
 	CSV, JSON, JSONL

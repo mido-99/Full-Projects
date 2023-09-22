@@ -25,5 +25,5 @@ class ScraperAppPipeline:
             pattern, repl = replace_setting
             item['data'] = re.sub(pattern, repl, item['data'])
         
-        print(item['data'])        
+        print(item['data'], item['column'])
         return item
