@@ -80,8 +80,7 @@ class CustomListItem(QWidget):
 
     def setPlaceHolder_column(self, text):
         self.column_name.setPlaceholderText(text)
-
-        
+    
     def get_current_item_and_index(self):   #*
         """Returns the current (QListItem) widget instance and its row number"""
         
@@ -102,10 +101,18 @@ class CustomListItem(QWidget):
                 self.list_widget.takeItem(index)
         else:
             self.list_widget.takeItem(index)
-
-
     
-    
+    def retrieve_fields(self):
+
+        data_dict = {
+            "tag": self.tag_element.text().strip(),
+            "elem_attr": self.elem_attr.text().strip(),
+            "attr_value": self.attr_value.text().strip().replace(' ', '.'),
+            "column": self.column_name.text().strip(),
+            "regex": self.regex_tuple or None,
+        }
+        return data_dict
+
     ## ContextMenu methods ##
     def Context_Menu(self):
         

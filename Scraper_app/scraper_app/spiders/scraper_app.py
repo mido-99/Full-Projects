@@ -32,9 +32,8 @@ class Scraper(scrapy.Spider):
                     regex_tuple = data_list[i].get('regex', None)
                 
                 yield {
-                    'data' : result,
+                    column : result,
                     'regex': regex_tuple,
-                    'column' : column,
                 }
     
     def generate_selectors(self):

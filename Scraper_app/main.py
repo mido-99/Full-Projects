@@ -1,6 +1,7 @@
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import QSize
-from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidgetItem, QFileDialog)
+from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidgetItem, QFileDialog,
+QMessageBox)
 from PyQt6.uic import loadUi
 from custom_widgets.q_list_item import CustomListItem
 from scrapy.crawler import CrawlerProcess
@@ -15,6 +16,8 @@ class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
         loadUi('main.ui', self)
+        
+        self.save_path = None
         
         self.handle_ui()
         self.handle_buttons()
@@ -42,10 +45,13 @@ class MainApp(QMainWindow):
     
     # These setters and getters are used to retrieve data in spider file from current 
     # running app instance
+    
+    # Input 
     def set_url(self):
         """Fetch start url"""
         
         self.url = self.lineEdit.text().strip()
+        return self.url
     
     def set_parent(self):
         """Parent element attributes"""
@@ -54,43 +60,54 @@ class MainApp(QMainWindow):
         self.parent_attr = self.lineEdit_3.text().strip()
         self.parent_attr_value = self.lineEdit_4.text().strip().replace(' ', '.')
         
+        return all((self.parent_tag, self.parent_attr, self.parent_attr_value))
+
+    def item_generator(self):
+        '''Generates the CustomListItem object and corresponding listWidgetItem
+        in the same row'''
+
+        for i in range(self.listWidget.count()):
+            item = self.listWidget.item(i)
+            custom = self.listWidget.itemWidget(item) #*
+            yield custom, item
+
     def get_user_input(self):
         """Retrieve data from QlineEdit widgets in a custom Listitem Widget"""
         
         self.data_list = []
-        for i in range(self.listWidget.count()):
-            item = self.listWidget.item(i)
-            custom = self.listWidget.itemWidget(item) #*
-
+        for custom, item in self.item_generator():
             # check if listItem is main or sub
             if item.data(Main_Role):
                 item_type = 'main'
             elif item.data(Sub_Role):
                 item_type = 'sub'
-
+            
             # Getting info from lineEdits
-            tag_elem = custom.tag_element.text().strip()
-            elem_attr = custom.elem_attr.text().strip()
-            attr_value = custom.attr_value.text().strip().replace(' ', '.')
-            column_name = custom.column_name.text().strip()
-            regex_tuple = custom.regex_tuple
-
-            data = {
-                "tag": tag_elem,
-                "elem_attr": elem_attr,
-                "attr_value": attr_value,
-                "column": column_name,
-                "type": item_type,
-                "regex": regex_tuple or None,
-            }
+            data = custom.retrieve_fields()
+            data["type"] = item_type
+            
             self.data_list.append(data)
     
+    def get_output_format(self):
+        '''Get curent selected output format'''
+        return self.comboBox.currentText()
+    
     def get_save_path(self):
-        """Get file save location and type"""
+        """Get file save location and extension"""
         
-        self.save_path, _ = QFileDialog.getSaveFileName(self, 'Save to', 'Data.jsonl', 
-            "jsonl files (*.jsonl);; json files (*.json);; csv files (*.csv)")
+        self.file_format = self.get_output_format()
+        self.save_path, _ = QFileDialog.getSaveFileName(self, 
+            'Save to', 
+            f'Output.{self.file_format}', 
+            f"{self.file_format} files (*.{self.file_format});;"
+            )
         return self.save_path
+    
+    def set_output_file(self, settings):
+        """Pass final file and format to settings file"""
+
+        settings.set('FEED_FORMAT', f"{self.file_format}")
+        settings.set('FEED_URI', f'{self.save_path}')
     
     def get_data(self):
         """Retrieve all collected data into spider file"""
@@ -98,21 +115,39 @@ class MainApp(QMainWindow):
         return (self.url, self.data_list, self.parent_tag, self.parent_attr, 
                 self.parent_attr_value)
 
+    # Validate before proceeding to crawling
     def validate_input(self):
         """Validate user input fields before starting spider to raise related error
         messageBox or warning"""
+        
+        if not self.set_url():
+            QMessageBox.critical(self, 
+                'Empty URL!', 'Please Provide a URL')
+        elif not self.set_parent():
+            QMessageBox.critical(self, 
+                'Empty Field!', 'Please Fill parent element data')
+        else:
+            return True
 
+#TODO Validate each field in customItem, may be done inside get_user_input
+    def validate_field(self):
         pass
+    
+    def validate_save_file(self):
+        """Ensure user has entered save file name"""
+
+        return True if self.save_path else bool(self.get_save_path())
 
     def start_crawling(self):
         """Method chain activator"""
         
-        if self.get_save_path():
-            self.set_url()
-            self.set_parent()
+        if self.validate_input() and self.validate_save_file():
             self.get_user_input()
             
-            process = CrawlerProcess(get_project_settings()) #*4
+            settings = get_project_settings()
+            self.set_output_file(settings)
+
+            process = CrawlerProcess(settings) #*4
             process.crawl('scraper_app')
             QApplication.processEvents()
             process.start()
@@ -120,9 +155,7 @@ class MainApp(QMainWindow):
             self.data_list.clear()
     
     def dummy_method(self):
-        self.get_user_input()
-        print(self.data_list)
-
+        print(self.get_save_path)
 
 import globals
 if __name__ == '__main__':
