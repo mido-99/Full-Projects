@@ -13,7 +13,7 @@ Have fields for:
 	Construct widgets for py_inject
 	
 Enhancements:
-	When main item (x) is clicked delete child
+	√ When main item (x) is clicked delete child
 	Warning before deletion (message_box)
 	Confirmation message before Start
 	Loading sign while spider crawls
@@ -32,7 +32,7 @@ Enhancements:
 	√ Refractor parse()
 	Literal python code injection into beginning or end of line
 	Restructure spider parse() after app works with yield and columns
-	Regex integration
+	√ Regex integration
 	
 
 # Output File Generation:

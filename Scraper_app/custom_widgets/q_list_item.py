@@ -3,7 +3,7 @@ QListWidgetItem, QVBoxLayout)
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtCore import Qt, QSize
 from .q_dialog import CustomDialog
-from globals import Sub_Role
+from globals import Sub_Role, Main_Role
 
 CLOSE_ICON = 'icons/close.jpeg'
 SETTING_ICON = 'icons/icons8-3-dots-50 (1).png'  #"https://icons8.com/icon/36944/ellipsis"
@@ -94,8 +94,16 @@ class CustomListItem(QWidget):
         return None
     
     def delete_self(self):
-        index = self.get_current_item_and_index()[1]
-        self.list_widget.takeItem(index)
+        curr_item, index = self.get_current_item_and_index()
+        next_item = self.list_widget.item(index + 1) if index + 1 < self.list_widget.count() else None
+
+        if next_item and curr_item.data(Main_Role) and next_item.data(Sub_Role):
+            for _ in range(2):
+                self.list_widget.takeItem(index)
+        else:
+            self.list_widget.takeItem(index)
+
+
     
     
     ## ContextMenu methods ##
