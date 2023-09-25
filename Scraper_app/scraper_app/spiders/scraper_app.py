@@ -33,6 +33,7 @@ class Scraper(scrapy.Spider):
                 
                 yield {
                     column : result,
+                    'column' : column,
                     'regex': regex_tuple,
                 }
     

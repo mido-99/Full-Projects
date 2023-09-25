@@ -1,4 +1,4 @@
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QMovie
 from PyQt6.QtCore import QSize
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidgetItem, QFileDialog,
 QMessageBox)
@@ -9,6 +9,7 @@ from scrapy.utils.project import get_project_settings
 from globals import Main_Role, Sub_Role
 
 APP_ICON = 'icons/scraper.png'
+LOADING_ICON = 'icons/Spinner-1s-200px (1).gif'
 
 
 class MainApp(QMainWindow):
@@ -22,17 +23,36 @@ class MainApp(QMainWindow):
         self.handle_ui()
         self.handle_buttons()
         
+    # Main 2 App Methods
     def handle_ui(self):
         self.setWindowTitle('Scraper')
         self.setWindowIcon(QIcon(APP_ICON))
+        self.add_loading_gif()
     
     def handle_buttons(self):
         self.pushButton_2.clicked.connect(self.add_field)
         self.pushButton.clicked.connect(self.get_save_path)
         self.pushButton_3.clicked.connect(self.start_crawling)  #*2
         self.pushButton_4.clicked.connect(self.dummy_method)
+    
+    
+    def add_loading_gif(self):
+        self.load_gif = QMovie(LOADING_ICON)
+        self.label_4.setMovie(self.load_gif)
+        self.label_4.setScaledContents(True)
+    
+    def gif_loading(self):
+        '''start loading animation as scrping starts'''
+
+        self.label_4.setVisible(True)
+        self.load_gif.start()
+    
+    def gif_stop(self):
+        '''stops loading animation when scraping finishes'''
         
-        
+        self.label_4.setVisible(False)    
+        self.load_gif.stop()
+
     def add_field(self):
         """Add a new field to the list when user clicks add"""
 
@@ -146,16 +166,25 @@ class MainApp(QMainWindow):
             
             settings = get_project_settings()
             self.set_output_file(settings)
-
+            
+            self.gif_loading()
             process = CrawlerProcess(settings) #*4
             process.crawl('scraper_app')
-            QApplication.processEvents()
             process.start()
+            self.gif_stop()
+            QApplication.processEvents()
             
             self.data_list.clear()
     
     def dummy_method(self):
-        print(self.get_save_path)
+        if self.load_gif.state() == QMovie.MovieState.NotRunning:
+            self.label_4.setVisible(True)
+            self.load_gif.start()
+        elif self.load_gif.state() == QMovie.MovieState.Running:
+            print('Running')
+            self.load_gif.stop()
+            self.label_4.setVisible(False)
+            
 
 import globals
 if __name__ == '__main__':
