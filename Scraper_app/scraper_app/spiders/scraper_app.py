@@ -68,9 +68,8 @@ class Scraper(scrapy.Spider):
     @staticmethod
     def construct_xpath(diction):
         """Construct xpath string for selectors according to user input"""
-
-        return f'''string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])'''
         
+        return f'''string(.//{diction['tag']}[@{diction['elem_attr']}="{diction['attr_value']}"])'''
         
 
 

@@ -1,5 +1,5 @@
 from PyQt6.QtGui import QIcon, QMovie
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import QSize, QThread
 from PyQt6.QtWidgets import (QMainWindow, QApplication, QListWidgetItem, QFileDialog,
 QMessageBox)
 from PyQt6.uic import loadUi
@@ -10,7 +10,15 @@ from globals import Main_Role, Sub_Role
 
 APP_ICON = 'icons/scraper.png'
 LOADING_ICON = 'icons/Spinner-1s-200px (1).gif'
+settings = get_project_settings()
 
+
+class CrawlThread(QThread):
+    
+    def run(self):
+        process = CrawlerProcess(settings) #*4
+        process.crawl('scraper_app')
+        process.start()
 
 class MainApp(QMainWindow):
     
@@ -88,7 +96,7 @@ class MainApp(QMainWindow):
 
         for i in range(self.listWidget.count()):
             item = self.listWidget.item(i)
-            custom = self.listWidget.itemWidget(item) #*
+            custom = self.listWidget.itemWidget(item) #*5
             yield custom, item
 
     def get_user_input(self):
@@ -162,19 +170,19 @@ class MainApp(QMainWindow):
         """Method chain activator"""
         
         if self.validate_input() and self.validate_save_file():
-            self.get_user_input()
-            
-            settings = get_project_settings()
+            self.get_user_input()            
             self.set_output_file(settings)
-            
             self.gif_loading()
-            process = CrawlerProcess(settings) #*4
-            process.crawl('scraper_app')
-            process.start()
-            self.gif_stop()
-            QApplication.processEvents()
             
-            self.data_list.clear()
+            self.crawl_Thread = CrawlThread()   #*
+            self.crawl_Thread.finished.connect(self.on_crawl_finished)
+            self.crawl_Thread.start()
+    
+    def on_crawl_finished(self):
+        '''To be executed after crawling finishes;  A Cleaning method'''
+        
+        self.gif_stop()
+        self.data_list.clear()
     
     def dummy_method(self):
         if self.load_gif.state() == QMovie.MovieState.NotRunning:
@@ -234,5 +242,8 @@ process.crawl() usually takes a class as argument, and since I can't import the 
 I'm using the other way of writing its name as a string.
 Last line of process.start() To start the crawling process.
 
+#*5 .self Importance
+Unless self here, the thread will be destroyed before it finishes its work (treated as
+garbage). so self must be used
 
 """

@@ -16,7 +16,7 @@ Enhancements:
 	√ When main item (x) is clicked delete child
 	Warning before deletion (message_box)
 	Confirmation message before Start
-	Loading sign while spider crawls
+	√ Loading icon while spider crawls
 	
 
 # Backend Functionality:
