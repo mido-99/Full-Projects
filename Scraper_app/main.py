@@ -13,13 +13,6 @@ LOADING_ICON = 'icons/Spinner-1s-200px (1).gif'
 settings = get_project_settings()
 
 
-class CrawlThread(QThread):
-    
-    def run(self):
-        process = CrawlerProcess(settings) #*4
-        process.crawl('scraper_app')
-        process.start()
-
 class MainApp(QMainWindow):
     
     def __init__(self):
@@ -174,16 +167,13 @@ class MainApp(QMainWindow):
             self.set_output_file(settings)
             self.gif_loading()
             
-            self.crawl_Thread = CrawlThread()   #*
-            self.crawl_Thread.finished.connect(self.on_crawl_finished)
-            self.crawl_Thread.start()
-    
-    def on_crawl_finished(self):
-        '''To be executed after crawling finishes;  A Cleaning method'''
+            process = CrawlerProcess(settings) #*4
+            process.crawl('scraper_app')
+            process.start()
+            self.gif_stop()
+            
+            self.data_list.clear()
         
-        self.gif_stop()
-        self.data_list.clear()
-    
     def dummy_method(self):
         if self.load_gif.state() == QMovie.MovieState.NotRunning:
             self.label_4.setVisible(True)

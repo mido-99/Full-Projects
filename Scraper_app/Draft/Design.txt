@@ -17,6 +17,11 @@ Enhancements:
 	Warning before deletion (message_box)
 	Confirmation message before Start
 	√ Loading icon while spider crawls
+	Make app responsive during crawling:
+processEvents won't work since scrapy block all operation while it's working. So I've tried QThread to run 2 processes on different threads.
+The issue is that scrapy reactor can't be run except on main thread:
+QThread: Destroyed while thread is still running
+
 	
 
 # Backend Functionality:
